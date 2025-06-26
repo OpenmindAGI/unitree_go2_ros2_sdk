@@ -59,7 +59,6 @@ def generate_launch_description():
             default_value=scan_mode,
             description='Specifying scan mode of lidar'),
 
-        # RPLidar A1 node
         Node(
             package='rplidar_ros',
             executable='rplidar_node',
@@ -74,20 +73,21 @@ def generate_launch_description():
             }],
             output='screen'),
 
-        # Static transform from base_link to laser frame
         Node(
             package='tf2_ros',
             executable='static_transform_publisher',
-            arguments=['0', '0', '0', '0', '0', '3.14159', 'base_link', 'laser']
+            name='static_transform_publisher_laser',
+            arguments=['--x', '0', '--y', '0', '--z', '0', 
+                    '--roll', '0', '--pitch', '0', '--yaw', '3.14159',
+                    '--frame-id', 'base_link', '--child-frame-id', 'laser'],
+            output='screen'
         ),
         
-        # Pose to TF node
         Node(
             package='unitree_go2_rplidar_slam',
             executable='pose_to_tf',
         ),
 
-        # SLAM Toolbox node with config file
         Node(
             package='slam_toolbox',
             executable='sync_slam_toolbox_node',
