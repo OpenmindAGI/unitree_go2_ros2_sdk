@@ -100,7 +100,6 @@ unitree_go2_rplidar_slam/
 ├── src/
 │   ├── __init__.py
 │   └── pose_to_tf.py      # Pose to transform broadcaster
-├── test/                  # Unit tests
 ├── package.xml            # Package dependencies
 ├── setup.py               # Python package setup
 └── README.md
