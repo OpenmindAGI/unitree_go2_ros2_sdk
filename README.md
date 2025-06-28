@@ -197,3 +197,17 @@ sudo usermod -a -G dialout $USER
 - Ensure all required transforms are being published
 - Check TF tree with: `ros2 run tf2_tools view_frames`
 - Verify timing with: `ros2 topic echo /tf`
+
+### Timestamp Issues
+
+Somehow, the timestamp of the ros topics from Unitree Go2 is 12 seconds behind the current timestamp. Please disable your computer `automatic date & Time` and sync the timestamp using 
+
+```
+sudo date -s "@unix"
+```
+
+You can find the timestamp of Unitree Go2 via
+
+```
+ros2 topic echo /utlidar/robot_pose --field header.stamp
+```
