@@ -12,6 +12,7 @@ setup(
         ('share/' + package_name, ['package.xml']),
         ('share/' + package_name + '/launch', ['launch/slam_launch.py']),
         ('share/' + package_name + '/config', ['config/slam.yaml']),
+        ('share/' + package_name + '/urdf', ['urdf/unitree_go2.urdf.xacro', 'urdf/unitree_go2.urdf']),
     ],
     install_requires=['setuptools'],
     zip_safe=True,

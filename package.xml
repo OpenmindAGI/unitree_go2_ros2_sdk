@@ -16,6 +16,10 @@
   <depend>launch</depend>
   <depend>launch_ros</depend>
   <depend>ament_index_python</depend>
+  <depend>robot_state_publisher</depend>
+  <depend>joint_state_publisher</depend>
+  <depend>urdf</depend>
+  <depend>xacro</depend>
 
   <test_depend>ament_copyright</test_depend>
   <test_depend>ament_flake8</test_depend>
