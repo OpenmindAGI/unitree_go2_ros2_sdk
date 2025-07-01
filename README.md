@@ -1,4 +1,4 @@
-# Unitree Go2 RPLiDAR SLAM
+# Unitree Go2 SDK
 
 A ROS 2 package that provides SLAM (Simultaneous Localization and Mapping) capabilities for the Unitree Go2 robot using an RPLiDAR sensor and the SLAM Toolbox.
 
@@ -131,8 +131,7 @@ unitree_go2_rplidar_slam/
 │   ├── go2_sdk/               # Python package source
 │   │   ├── __init__.py
 │   │   ├── pose_to_tf.py      # Pose to transform broadcaster
-│   │   ├── go2_command.py     # Command velocity to Go2 converter
-│   │   └── go2_command_script.py
+│   │   ├── go2_movement.py     # Command velocity to Go2 converter
 │   ├── package.xml            # Package dependencies
 │   ├── setup.py               # Python package setup
 │   └── resource/
