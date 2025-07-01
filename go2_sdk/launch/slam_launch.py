@@ -6,7 +6,7 @@ from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 
 def generate_launch_description():
-    pkg_dir = get_package_share_directory('unitree_go2_rplidar_slam')
+    pkg_dir = get_package_share_directory('go2_sdk')
 
     slam_config_file = os.path.join(pkg_dir, 'config', 'slam.yaml')
 
@@ -80,8 +80,15 @@ def generate_launch_description():
         ),
 
         Node(
-            package='unitree_go2_rplidar_slam',
+            package='go2_sdk',
             executable='pose_to_tf',
+        ),
+
+        Node(
+            package='go2_sdk',
+            executable='cmd_vel_to_go2',
+            name='cmd_vel_to_go2',
+            output='screen',
         ),
 
         Node(

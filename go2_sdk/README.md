@@ -34,18 +34,18 @@ The following ROS 2 packages are required:
 1. Clone this repository into your ROS 2 workspace:
 ```bash
 cd ~/ros2_ws/src
-git clone https://github.com/OpenmindAGI/unitree_go2_rplidar_slam.git unitree_go2_rplidar_slam
+git clone https://github.com/OpenmindAGI/go2_sdk.git go2_sdk
 ```
 
 2. Install dependencies:
 ```bash
 cd ~/ros2_ws
-rosdep install --from-paths src --ignore-src -r -y
+rosdep install --from-paths . --ignore-src -r -y
 ```
 
 3. Build the package:
 ```bash
-colcon build --packages-select unitree_go2_rplidar_slam
+colcon build --packages-select go2_sdk
 ```
 
 4. Source the workspace:
@@ -65,7 +65,7 @@ sudo chmod 777 /dev/ttyUSB0
 To start the complete SLAM system:
 
 ```bash
-ros2 launch unitree_go2_rplidar_slam slam_launch.py
+ros2 launch go2_sdk slam_launch.py
 ```
 
 ### Launch with Custom Parameters
@@ -73,7 +73,7 @@ ros2 launch unitree_go2_rplidar_slam slam_launch.py
 You can customize the RPLiDAR configuration:
 
 ```bash
-ros2 launch unitree_go2_rplidar_slam slam_launch.py \
+ros2 launch go2_sdk slam_launch.py \
     serial_port:=/dev/ttyUSB0 \
     serial_baudrate:=115200 \
     frame_id:=laser \
@@ -91,7 +91,7 @@ rviz2 -d config/rviz.rviz
 ## Package Structure
 
 ```
-unitree_go2_rplidar_slam/
+go2_sdk/
 ├── config/
 │   ├── slam.yaml          # SLAM Toolbox configuration
 │   └── rviz.rviz          # RViz visualization setup
@@ -145,7 +145,7 @@ Default RPLiDAR settings:
 - **Function:** Performs SLAM using laser scan data
 
 ### 3. Pose to TF Broadcaster
-- **Package:** `unitree_go2_rplidar_slam`
+- **Package:** `go2_sdk`
 - **Executable:** `pose_to_tf`
 - **Function:** Converts robot pose messages to TF transforms
 
@@ -200,7 +200,7 @@ sudo usermod -a -G dialout $USER
 
 ### Timestamp Issues
 
-Somehow, the timestamp of the ros topics from Unitree Go2 is 12 seconds behind the current timestamp. Please disable your computer `automatic date & Time` and sync the timestamp using 
+Somehow, the timestamp of the ros topics from Unitree Go2 is 12 seconds behind the current timestamp. Please disable your computer `automatic date & Time` and sync the timestamp using
 
 ```
 sudo date -s "@unix"

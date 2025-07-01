@@ -1,6 +1,6 @@
 from setuptools import find_packages, setup
 
-package_name = 'unitree_go2_rplidar_slam'
+package_name = 'go2_sdk'
 
 setup(
     name=package_name,
@@ -8,21 +8,22 @@ setup(
     packages=find_packages(exclude=['test']),
     data_files=[
         ('share/ament_index/resource_index/packages',
-            ['resource/' + package_name]),
+            ['resource/go2_sdk']),
         ('share/' + package_name, ['package.xml']),
         ('share/' + package_name + '/launch', ['launch/slam_launch.py']),
-        ('share/' + package_name + '/config', ['config/slam.yaml']),
+        ('share/' + package_name + '/config', ['config/slam.yaml', 'config/rviz.rviz']),
     ],
     install_requires=['setuptools'],
     zip_safe=True,
-    maintainer='jan',
-    maintainer_email='TangmereCottage@protonmail.com',
+    maintainer='openmind',
+    maintainer_email='hello@openmind.org',
     description='Unitree Go2 robot SLAM package with RPLidar',
     license='MIT',
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'pose_to_tf = src.pose_to_tf:main',
+            'pose_to_tf = go2_sdk.pose_to_tf:main',
+            'cmd_vel_to_go2 = go2_sdk.go2_command:main',
         ],
     },
 )
