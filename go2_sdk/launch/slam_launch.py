@@ -9,6 +9,7 @@ def generate_launch_description():
     pkg_dir = get_package_share_directory('go2_sdk')
 
     slam_config_file = os.path.join(pkg_dir, 'config', 'slam.yaml')
+    nav2_config_file = os.path.join(pkg_dir, 'config', 'nav2_params.yaml')
 
     channel_type = LaunchConfiguration('channel_type', default='serial')
     serial_port = LaunchConfiguration('serial_port', default='/dev/ttyUSB0')
@@ -17,9 +18,10 @@ def generate_launch_description():
     inverted = LaunchConfiguration('inverted', default='false')
     angle_compensate = LaunchConfiguration('angle_compensate', default='true')
     scan_mode = LaunchConfiguration('scan_mode', default='Sensitivity')
+    use_nav2 = LaunchConfiguration('use_nav2', default='true')
+    map_yaml_file = LaunchConfiguration('map_yaml_file', default='/home/jan/Documents/GitHub/unitree_go2_rplidar_slam/office.data')
 
     return LaunchDescription([
-        # Launch arguments for RPLidar
         DeclareLaunchArgument(
             'channel_type',
             default_value=channel_type,
@@ -54,6 +56,16 @@ def generate_launch_description():
             'scan_mode',
             default_value=scan_mode,
             description='Specifying scan mode of lidar'),
+
+        DeclareLaunchArgument(
+            'use_nav2',
+            default_value=use_nav2,
+            description='Whether to launch Nav2 navigation stack'),
+
+        DeclareLaunchArgument(
+            'map_yaml_file',
+            default_value=map_yaml_file,
+            description='Full path to map yaml file (leave empty for SLAM mode)'),
 
         Node(
             package='rplidar_ros',
@@ -122,5 +134,97 @@ def generate_launch_description():
             name='slam_toolbox',
             parameters=[slam_config_file],
             output='screen'
-        )
+        ),
+
+        Node(
+            package='nav2_lifecycle_manager',
+            executable='lifecycle_manager',
+            name='lifecycle_manager_navigation',
+            output='screen',
+            parameters=[{'use_sim_time': False},
+                       {'autostart': True},
+                       {'node_names': ['controller_server',
+                                      'smoother_server',
+                                      'planner_server',
+                                      'behavior_server',
+                                      'bt_navigator',
+                                      'waypoint_follower',
+                                      'velocity_smoother']}]
+        ),
+
+        Node(
+            package='nav2_controller',
+            executable='controller_server',
+            output='screen',
+            parameters=[nav2_config_file],
+            remappings=[('/cmd_vel', '/cmd_vel')]
+        ),
+
+        Node(
+            package='nav2_smoother',
+            executable='smoother_server',
+            name='smoother_server',
+            output='screen',
+            parameters=[nav2_config_file]
+        ),
+
+        Node(
+            package='nav2_planner',
+            executable='planner_server',
+            name='planner_server',
+            output='screen',
+            parameters=[nav2_config_file]
+        ),
+
+        Node(
+            package='nav2_behaviors',
+            executable='behavior_server',
+            name='behavior_server',
+            output='screen',
+            parameters=[nav2_config_file]
+        ),
+
+        Node(
+            package='nav2_bt_navigator',
+            executable='bt_navigator',
+            name='bt_navigator',
+            output='screen',
+            parameters=[nav2_config_file]
+        ),
+
+        Node(
+            package='nav2_waypoint_follower',
+            executable='waypoint_follower',
+            name='waypoint_follower',
+            output='screen',
+            parameters=[nav2_config_file]
+        ),
+
+        Node(
+            package='nav2_velocity_smoother',
+            executable='velocity_smoother',
+            name='velocity_smoother',
+            output='screen',
+            parameters=[nav2_config_file],
+            remappings=[('/cmd_vel', '/cmd_vel_nav'),
+                       ('/cmd_vel_smoothed', '/cmd_vel')]
+        ),
+
+        # Node(
+        #     package='nav2_lifecycle_manager',
+        #     executable='lifecycle_manager',
+        #     name='lifecycle_manager_localization',
+        #     output='screen',
+        #     parameters=[{'use_sim_time': False},
+        #                {'autostart': True},
+        #                {'node_names': ['amcl']}]
+        # ),
+
+        # Node(
+        #     package='nav2_amcl',
+        #     executable='amcl',
+        #     name='amcl',
+        #     output='screen',
+        #     parameters=[nav2_config_file]
+        # )
     ])
