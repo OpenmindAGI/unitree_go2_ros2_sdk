@@ -169,48 +169,6 @@ Default RPLiDAR settings:
 - **Frame ID:** `laser`
 - **Scan Mode:** `Sensitivity`
 
-## Nodes
-
-### 1. RPLiDAR Node
-- **Package:** `rplidar_ros`
-- **Executable:** `rplidar_node`
-- **Function:** Publishes laser scan data from RPLiDAR
-
-### 2. SLAM Toolbox Node
-- **Package:** `slam_toolbox`
-- **Executable:** `sync_slam_toolbox_node`
-- **Function:** Performs SLAM using laser scan data
-
-### 3. Pose to TF Broadcaster
-- **Package:** `go2_sdk`
-- **Executable:** `pose_to_tf`
-- **Function:** Converts robot pose messages to TF transforms
-
-### 4. Command Velocity to Go2 Converter
-- **Package:** `go2_sdk`
-- **Executable:** `cmd_vel_to_go2`
-- **Function:** Converts standard ROS cmd_vel messages to Unitree Go2 sport commands
-
-### 5. Static Transform Publisher
-- **Package:** `tf2_ros`
-- **Function:** Publishes static transform from `base_link` to `laser`
-
-## Topics
-
-- `/scan` - Laser scan data from RPLiDAR
-- `/map` - Occupancy grid map from SLAM Toolbox
-- `/cmd_vel` - Velocity commands for robot movement
-- `/utlidar/robot_pose` - Robot pose from Unitree Go2
-- `/lf_sport_req` - Sport command requests to Go2 robot
-- `/tf` and `/tf_static` - Transform data
-
-## Frames
-
-- `map` - Global reference frame
-- `odom` - Odometry frame
-- `base_link` - Robot base frame
-- `laser` - LiDAR sensor frame
-
 ## Troubleshooting
 
 ### RPLiDAR Connection Issues
