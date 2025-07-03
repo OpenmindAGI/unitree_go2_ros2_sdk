@@ -2,6 +2,7 @@ import rclpy
 from rclpy.node import Node
 import tf2_ros
 from tf2_ros import TransformException
+from geometry_msgs.msg import PoseStamped
 import math
 
 
@@ -12,11 +13,13 @@ class WaypointManager(Node):
         self.tf_buffer = tf2_ros.Buffer()
         self.tf_listener = tf2_ros.TransformListener(self.tf_buffer, self)
 
+        self.pose_publisher = self.create_publisher(PoseStamped, 'robot_pose', 10)
+
         self.log_frequency = 1.0
         self.map_frame = 'map'
         self.base_frame = 'base_link'
 
-        self.timer = self.create_timer(1.0 / self.log_frequency, self.log_robot_location)
+        self.timer = self.create_timer(1.0 / self.log_frequency, self.publish_robot_location)
 
         self.get_logger().info(f'Robot location logger started. Logging at {self.log_frequency} Hz')
         self.get_logger().info(f'Transform: {self.map_frame} -> {self.base_frame}')
@@ -57,9 +60,9 @@ class WaypointManager(Node):
 
         return roll, pitch, yaw
 
-    def log_robot_location(self):
+    def publish_robot_location(self):
         """
-        Get current robot location and log it
+        Get current robot location and publish it as a PoseStamped message.
         """
         try:
             transform = self.tf_buffer.lookup_transform(
@@ -78,7 +81,22 @@ class WaypointManager(Node):
             qz = transform.transform.rotation.z
             qw = transform.transform.rotation.w
 
-            self.get_logger().info(
+            pose_msg = PoseStamped()
+            pose_msg.header.stamp = self.get_clock().now().to_msg()
+            pose_msg.header.frame_id = self.map_frame
+
+            pose_msg.pose.position.x = x
+            pose_msg.pose.position.y = y
+            pose_msg.pose.position.z = z
+
+            pose_msg.pose.orientation.x = qx
+            pose_msg.pose.orientation.y = qy
+            pose_msg.pose.orientation.z = qz
+            pose_msg.pose.orientation.w = qw
+
+            self.pose_publisher.publish(pose_msg)
+
+            self.get_logger().debug(
                 f'Robot Location: X={x:.3f}, Y={y:.3f}, Z={z:.3f} | '
                 f'Orientation (Quaternion): [{qx:.3f}, {qy:.3f}, {qz:.3f}, {qw:.3f}]'
             )
