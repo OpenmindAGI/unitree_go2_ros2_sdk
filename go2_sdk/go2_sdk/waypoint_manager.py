@@ -13,7 +13,7 @@ class WaypointManager(Node):
         self.tf_buffer = tf2_ros.Buffer()
         self.tf_listener = tf2_ros.TransformListener(self.tf_buffer, self)
 
-        self.pose_publisher = self.create_publisher(PoseStamped, 'robot_pose', 10)
+        self.pose_publisher = self.create_publisher(PoseStamped, '/om/robot_pose', 10)
 
         self.log_frequency = 1.0
         self.map_frame = 'map'
