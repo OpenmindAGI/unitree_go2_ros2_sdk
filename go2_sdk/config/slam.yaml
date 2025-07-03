@@ -7,8 +7,8 @@ slam_toolbox:
     scan_topic: /scan
 
     # SLAM parameters
-    mode: "mapping"
-    # mode: "localization"
+    # mode: "mapping"
+    mode: "localization"
     # map_start_pose: [0.0, 0.0, 0.0]
     map_start_at_dock: true
 

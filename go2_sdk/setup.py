@@ -24,6 +24,7 @@ setup(
         'console_scripts': [
             'pose_to_tf = go2_sdk.pose_to_tf:main',
             'cmd_vel_to_go2 = go2_sdk.go2_movement:main',
+            'waypoint_manager = go2_sdk.waypoint_manager:main',
         ],
     },
 )

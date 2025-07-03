@@ -104,6 +104,13 @@ def generate_launch_description():
         ),
 
         Node(
+            package='go2_sdk',
+            executable='waypoint_manager',
+            name='waypoint_manager',
+            output='screen',
+        ),
+
+        Node(
             package='joy',
             executable='joy_node',
             name='joy_node',
