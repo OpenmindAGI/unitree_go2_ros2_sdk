@@ -130,7 +130,7 @@ def main(args=None):
         rclpy.spin(node)
 
     except Exception as e:
-        print(f"")
+        print(f"CmdVelToSportNode encountered an error: {e}")
 
 if __name__ == "__main__":
     main()

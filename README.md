@@ -142,33 +142,6 @@ unitree_go2_rplidar_slam/
 └── README.md
 ```
 
-## Configuration
-
-### SLAM Parameters
-
-Key SLAM parameters can be adjusted in [`config/slam.yaml`](config/slam.yaml):
-
-- **Frame Configuration:**
-  - `base_frame`: `base_link`
-  - `odom_frame`: `odom`
-  - `map_frame`: `map`
-
-- **Laser Parameters:**
-  - `minimum_laser_range`: `0.1m`
-  - `maximum_laser_range`: `12.0m`
-
-- **Performance Tuning:**
-  - `scan_buffer_size`: `20`
-  - `tf_buffer_duration`: `30.0s`
-
-### RPLiDAR Configuration
-
-Default RPLiDAR settings:
-- **Serial Port:** `/dev/ttyUSB0`
-- **Baudrate:** `115200`
-- **Frame ID:** `laser`
-- **Scan Mode:** `Sensitivity`
-
 ## Troubleshooting
 
 ### RPLiDAR Connection Issues
