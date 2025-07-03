@@ -8,6 +8,7 @@ slam_toolbox:
 
     # SLAM parameters
     mode: "mapping"
+    # mode: "localization"
     # map_start_pose: [0.0, 0.0, 0.0]
     map_start_at_dock: true
 
@@ -20,19 +21,40 @@ slam_toolbox:
     scan_buffer_maximum_scan_distance: 12.0
     tf_buffer_duration: 30.0
 
-    # Reduce drift with tighter constraints
-    loop_search_maximum_distance: 3.0
+    # Reduce motion thresholds to update more frequently on slopes
+    minimum_travel_distance: 0.2
+    minimum_travel_heading: 0.1
+    minimum_time_interval: 0.5
+
+    # Improve scan matching for slope transitions
+    use_scan_matching: true
+    use_scan_barycenter: true
+    minimum_angle_penalty: 0.9
+    minimum_distance_penalty: 0.5
+
+    # Tighten loop closure for slopes
+    loop_search_maximum_distance: 2.0
     do_loop_closing: true
-    loop_match_minimum_response_coarse: 0.35
-    loop_match_maximum_response_coarse: 0.45
+    loop_match_minimum_response_coarse: 0.4
+    loop_match_maximum_response_coarse: 0.6
+    loop_match_minimum_response_fine: 0.45
 
-    # Motion model tuning for dog movement
-    correlation_search_space_dimension: 0.5
-    correlation_search_space_resolution: 0.01
-    correlation_search_space_smear_deviation: 0.1
+    # Improve correlation search for slope handling
+    correlation_search_space_dimension: 0.3
+    correlation_search_space_resolution: 0.005
+    correlation_search_space_smear_deviation: 0.05
 
-    # Solver settings
+    # Add constraint building for better mapping
+    max_laser_range: 12.0
+    laser_sample_increment: 1
+    laser_sample_maximum_range: 12.0
+
+    # Solver settings (keep your existing ones)
     ceres_linear_solver: SPARSE_NORMAL_CHOLESKY
     ceres_preconditioner: SCHUR_JACOBI
     ceres_trust_strategy: LEVENBERG_MARQUARDT
     ceres_dogleg_type: TRADITIONAL_DOGLEG
+
+    # Additional slope-specific parameters
+    transform_timeout: 0.2
+    map_update_interval: 2.0
