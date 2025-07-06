@@ -224,21 +224,21 @@ def generate_launch_description():
                        ('/cmd_vel_smoothed', '/cmd_vel')]
         ),
 
-        # Node(
-        #     package='nav2_lifecycle_manager',
-        #     executable='lifecycle_manager',
-        #     name='lifecycle_manager_localization',
-        #     output='screen',
-        #     parameters=[{'use_sim_time': False},
-        #                {'autostart': True},
-        #                {'node_names': ['amcl']}]
-        # ),
+        Node(
+            package='nav2_lifecycle_manager',
+            executable='lifecycle_manager',
+            name='lifecycle_manager_localization',
+            output='screen',
+            parameters=[{'use_sim_time': False},
+                       {'autostart': True},
+                       {'node_names': ['amcl']}]
+        ),
 
-        # Node(
-        #     package='nav2_amcl',
-        #     executable='amcl',
-        #     name='amcl',
-        #     output='screen',
-        #     parameters=[nav2_config_file]
-        # )
+        Node(
+            package='nav2_amcl',
+            executable='amcl',
+            name='amcl',
+            output='screen',
+            parameters=[nav2_config_file]
+        )
     ])
