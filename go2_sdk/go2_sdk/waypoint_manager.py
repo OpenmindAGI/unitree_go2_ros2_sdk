@@ -24,42 +24,6 @@ class WaypointManager(Node):
         self.get_logger().info(f'Robot location logger started. Logging at {self.log_frequency} Hz')
         self.get_logger().info(f'Transform: {self.map_frame} -> {self.base_frame}')
 
-    def quaternion_to_euler(self, qx: float, qy: float, qz: float, qw: float) -> tuple:
-        """
-        Convert quaternion to euler angles (roll, pitch, yaw)
-
-        Parameters:
-        -----------
-        qx : float
-            Quaternion x component
-        qy : float
-            Quaternion y component
-        qz : float
-            Quaternion z component
-        qw : float
-            Quaternion w component
-
-        Returns:
-        --------
-        tuple
-            (roll, pitch, yaw) in radians
-        """
-        sinr_cosp = 2 * (qw * qx + qy * qz)
-        cosr_cosp = 1 - 2 * (qx * qx + qy * qy)
-        roll = math.atan2(sinr_cosp, cosr_cosp)
-
-        sinp = 2 * (qw * qy - qz * qx)
-        if abs(sinp) >= 1:
-            pitch = math.copysign(math.pi / 2, sinp)
-        else:
-            pitch = math.asin(sinp)
-
-        siny_cosp = 2 * (qw * qz + qx * qy)
-        cosy_cosp = 1 - 2 * (qy * qy + qz * qz)
-        yaw = math.atan2(siny_cosp, cosy_cosp)
-
-        return roll, pitch, yaw
-
     def publish_robot_location(self):
         """
         Get current robot location and publish it as a PoseStamped message.
