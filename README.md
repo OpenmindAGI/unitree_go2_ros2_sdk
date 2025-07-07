@@ -35,7 +35,7 @@ We provide two options for placing the RPLiDAR on the Unitree Go2 robot:
 
      ![Head example](./models/head.jpg)
 
-   - **Option 2**: Mount the RPLidar on the middle of the robot using a 3D-printed mount.
+   - **Option 2**: Mount the RPLidar at the center of the robot using a 3D-printed mount.
 
      ![Body example](./models/body.jpg)
 
