@@ -19,7 +19,7 @@ def generate_launch_description():
     angle_compensate = LaunchConfiguration('angle_compensate', default='true')
     scan_mode = LaunchConfiguration('scan_mode', default='Sensitivity')
     use_nav2 = LaunchConfiguration('use_nav2', default='true')
-    map_yaml_file = LaunchConfiguration('map_yaml_file', default='/home/jan/Documents/GitHub/unitree_go2_rplidar_slam/office.data')
+    map_yaml_file = LaunchConfiguration('map_yaml_file', default='')
 
     return LaunchDescription([
         DeclareLaunchArgument(

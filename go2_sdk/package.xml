@@ -4,7 +4,7 @@
   <name>go2_sdk</name>
   <version>0.0.0</version>
   <description>Unitree Go2 robot SLAM package with RPLidar</description>
-  <maintainer email="hello@openmind.org">jan</maintainer>
+  <maintainer email="hello@openmind.org">OpenMind</maintainer>
   <license>MIT</license>
 
   <depend>rclpy</depend>
