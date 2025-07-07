@@ -1,12 +1,13 @@
 # Unitree Go2 SDK
 
-A ROS 2 package that provides SLAM (Simultaneous Localization and Mapping) capabilities for the Unitree Go2 robot using an RPLiDAR sensor and the SLAM Toolbox.
+A ROS 2 package that provides SLAM (Simultaneous Localization and Mapping) capabilities for the Unitree Go2 robot using an RPLiDAR sensor, the SLAM Toolbox and the Nav2 stack.
 
 ## Overview
 
 This package integrates:
 - **RPLiDAR** for laser scanning
 - **SLAM Toolbox** for mapping and localization
+- **Nav2** for autonomous navigation
 - **Transform broadcasting** for robot pose integration
 - **RViz visualization** for real-time monitoring
 
@@ -14,10 +15,10 @@ This package integrates:
 
 - **Real-time SLAM**: Simultaneous localization and mapping using SLAM Toolbox
 - **RPLiDAR Integration**: Support for RPLiDAR A1/A2/A3 series sensors
+- **Navigation**: Integration with Nav2 for autonomous navigation
 - **Robot Control**: Direct integration with Unitree Go2 movement commands
 - **Visualization**: Pre-configured RViz setup for monitoring
 - **Transform Management**: Automatic handling of coordinate frame transforms
-- **Configurable Parameters**: Easy customization of SLAM and sensor parameters
 
 ## Prerequisites
 
@@ -25,45 +26,54 @@ This package integrates:
 - Python 3.10+
 - RPLiDAR connected via USB (typically `/dev/ttyUSB0`)
 
-## Dependencies
-
-The following ROS 2 packages are required:
-- `rclpy` - Python client library for ROS 2
-- `tf2_ros` - Transform library
-- `sensor_msgs` - Sensor message definitions
-- `geometry_msgs` - Geometry message definitions
-- `rplidar_ros` - RPLiDAR driver
-- `slam_toolbox` - SLAM implementation
-- `launch` - Launch system
-- `launch_ros` - ROS-specific launch functionality
-- `ament_index_python` - Package resource indexing
-- `unitree_api` - Custom Unitree Go2 API messages (included in this repository)
-
 ## Installation
 
-1. Clone this repository into your ROS 2 workspace:
+### 0. Hardware setup:
+
+We provide two options for placing the RPLiDAR on the Unitree Go2 robot:
+   - **Option 1**: Mount the RPLiDAR on the head of the robot using a 3D-printed mount.
+
+     ![Head example](./models/head.jpg)
+
+   - **Option 2**: Mount the RPLidar on the middle of the robot using a 3D-printed mount.
+
+     ![Body example](./models/body.jpg)
+
+You can find the 3D model for the mount in the `models` directory of this repository.
+
+### 1. Clone this repository into your ROS 2 workspace:
+
 ```bash
 cd ~/ros2_ws/src
 git clone https://github.com/OpenmindAGI/unitree_go2_ros2_sdk.git
 ```
 
-2. Install dependencies:
+### 2. Install dependencies:
+
 ```bash
 cd ~/ros2_ws
 rosdep install --from-paths . --ignore-src -r -y
 ```
 
-3. Build the packages:
+### 3. Install Python dependencies:
+```bash
+pip install -r requirements.txt
+```
+
+### 4. Build the packages:
+
 ```bash
 colcon build --packages-select unitree_api go2_sdk
 ```
 
-4. Source the workspace:
+### 5. Source the workspace:
+
 ```bash
 source install/setup.bash
 ```
 
-5. Set up RPLiDAR permissions:
+### 6. Set up RPLiDAR permissions:
+
 ```bash
 # Option 1: Temporary permission (needs to be run each time)
 sudo chmod 777 /dev/ttyUSB0
@@ -118,30 +128,6 @@ Launch RViz with the provided configuration:
 rviz2 -d config/rviz.rviz
 ```
 
-## Package Structure
-
-```
-unitree_go2_rplidar_slam/
-├── go2_sdk/                    # Main ROS 2 package
-│   ├── config/
-│   │   ├── slam.yaml          # SLAM Toolbox configuration
-│   │   └── rviz.rviz          # RViz visualization setup
-│   ├── launch/
-│   │   └── slam_launch.py     # Main launch file
-│   ├── go2_sdk/               # Python package source
-│   │   ├── __init__.py
-│   │   ├── pose_to_tf.py      # Pose to transform broadcaster
-│   │   ├── go2_movement.py     # Command velocity to Go2 converter
-│   ├── package.xml            # Package dependencies
-│   ├── setup.py               # Python package setup
-│   └── resource/
-├── unitree_api/               # Unitree API messages package
-│   ├── CMakeLists.txt
-│   ├── package.xml
-│   └── msg/                   # Custom message definitions
-└── README.md
-```
-
 ## Troubleshooting
 
 ### RPLiDAR Connection Issues
@@ -175,19 +161,18 @@ sudo usermod -a -G dialout $USER
 
 ### Robot Control Issues
 
-- Check if the robot is receiving commands: `ros2 topic echo /lf_sport_req`
 - Verify cmd_vel messages are being published: `ros2 topic echo /cmd_vel`
 - Ensure the robot is in the correct mode for receiving movement commands
 
 ### Timestamp Issues
 
-Somehow, the timestamp of the ros topics from Unitree Go2 is 12 seconds behind the current timestamp. Please disable your computer `automatic date & Time` and sync the timestamp using
+The ROS topic timestamps from the Unitree Go2 are 12 seconds behind the current system time. Please disable your computer’s `Automatic Date & Time` setting and manually sync the timestamp using:
 
 ```
 sudo date -s "@unix"
 ```
 
-You can find the timestamp of Unitree Go2 via
+You can find the timestamp from the Unitree Go2 by running:
 
 ```
 ros2 topic echo /utlidar/robot_pose --field header.stamp
