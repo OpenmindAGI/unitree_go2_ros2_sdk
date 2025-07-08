@@ -2,11 +2,9 @@ import rclpy
 from rclpy.node import Node
 from flask import Flask, jsonify, request
 from flask_cors import CORS
-from geometry_msgs.msg import PoseStamped
+from geometry_msgs.msg import PoseStamped, PoseWithCovarianceStamped
 import threading
-import time
-from typing import Dict, Any, Optional
-import json
+from typing import Optional
 
 class Go2APINode(Node):
     """
@@ -17,7 +15,7 @@ class Go2APINode(Node):
 
         self.pose_subscription = self.create_subscription(
             PoseStamped,
-            '/om/robot_pose',
+            '/om/pose',
             self.pose_callback,
             10
         )
@@ -28,7 +26,14 @@ class Go2APINode(Node):
             10
         )
 
-        self.pose_data: Optional[PoseStamped] = None
+        self.amcl_subscription = self.create_subscription(
+            PoseWithCovarianceStamped,
+            '/amcl_pose',
+            self.amcl_callback,
+            10
+        )
+
+        self.pose_data: Optional[PoseWithCovarianceStamped] = None
 
         self.app = Flask(__name__)
         CORS(self.app)
@@ -73,7 +78,8 @@ class Go2APINode(Node):
                     "y": self.pose_data.pose.orientation.y,
                     "z": self.pose_data.pose.orientation.z,
                     "w": self.pose_data.pose.orientation.w
-                }
+                },
+                "covariance": self.pose_data.pose.covariance
             }
 
             return jsonify(pose), 200
@@ -123,6 +129,17 @@ class Go2APINode(Node):
         """
         self.pose_data = msg
 
+    def amcl_callback(self, msg: PoseWithCovarianceStamped):
+        """
+        Callback function for AMCL pose updates.
+        Updates the internal pose data and logs the received AMCL pose.
+
+        Parameters:
+        -----------
+        msg : geometry_msgs.msg.PoseWithCovarianceStamped
+            The incoming AMCL pose message containing the robot's pose with covariance.
+        """
+        self.pose_data.pose.covariance = msg.pose.covariance
 
 def main(args=None):
     """
