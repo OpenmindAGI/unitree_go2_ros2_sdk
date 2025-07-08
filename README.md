@@ -96,6 +96,15 @@ To start the complete SLAM system:
 ros2 launch go2_sdk slam_launch.py
 ```
 
+Once you have done the mapping, you can save the map through the RViz2 interface by clicking on the `Save Map` button and the `Serialize Map` in the `SlamToolboxPlugin` panel.
+
+### Launch Navigation System
+To start the navigation system with SLAM:
+
+```bash
+ros2 launch go2_sdk nav_launch.py map_yaml_file:=<path_to_your_map_yaml_file>
+```
+
 ### Launch with Custom Parameters
 
 You can customize RPLiDAR and other parameters:
