@@ -8,7 +8,6 @@ from launch_ros.actions import Node
 def generate_launch_description():
     pkg_dir = get_package_share_directory('go2_sdk')
 
-    slam_config_file = os.path.join(pkg_dir, 'config', 'slam.yaml')
     nav2_config_file = os.path.join(pkg_dir, 'config', 'nav2_params.yaml')
 
     channel_type = LaunchConfiguration('channel_type', default='serial')
@@ -19,7 +18,7 @@ def generate_launch_description():
     angle_compensate = LaunchConfiguration('angle_compensate', default='true')
     scan_mode = LaunchConfiguration('scan_mode', default='Sensitivity')
     use_nav2 = LaunchConfiguration('use_nav2', default='true')
-    map_yaml_file = LaunchConfiguration('map_yaml_file', default='')
+    map_yaml_file = LaunchConfiguration('map_yaml_file')
 
     return LaunchDescription([
         DeclareLaunchArgument(
@@ -64,7 +63,6 @@ def generate_launch_description():
 
         DeclareLaunchArgument(
             'map_yaml_file',
-            default_value=map_yaml_file,
             description='Full path to map yaml file (leave empty for SLAM mode)'),
 
         Node(
@@ -151,14 +149,6 @@ def generate_launch_description():
         ),
 
         Node(
-            package='slam_toolbox',
-            executable='sync_slam_toolbox_node',
-            name='slam_toolbox',
-            parameters=[slam_config_file],
-            output='screen'
-        ),
-
-        Node(
             package='nav2_lifecycle_manager',
             executable='lifecycle_manager',
             name='lifecycle_manager_navigation',
@@ -233,6 +223,17 @@ def generate_launch_description():
         ),
 
         Node(
+            package='nav2_map_server',
+            executable='map_server',
+            name='map_server',
+            output='screen',
+            parameters=[{
+                'use_sim_time': False,
+                'yaml_filename': map_yaml_file
+            }]
+        ),
+
+        Node(
             package='nav2_lifecycle_manager',
             executable='lifecycle_manager',
             name='lifecycle_manager_localization',
@@ -240,7 +241,7 @@ def generate_launch_description():
             parameters=[
                 {'use_sim_time': False},
                 {'autostart': True},
-                {'node_names': ['amcl']}]
+                {'node_names': ['map_server', 'amcl']}]
         ),
 
         Node(

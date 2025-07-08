@@ -13,18 +13,18 @@ class WaypointManager(Node):
         self.tf_buffer = tf2_ros.Buffer()
         self.tf_listener = tf2_ros.TransformListener(self.tf_buffer, self)
 
-        self.pose_publisher = self.create_publisher(PoseStamped, '/om/robot_pose', 10)
+        self.pose_publisher = self.create_publisher(PoseStamped, '/om/pose', 10)
 
         self.log_frequency = 1.0
         self.map_frame = 'map'
         self.base_frame = 'base_link'
 
-        self.timer = self.create_timer(1.0 / self.log_frequency, self.publish_robot_location)
+        self.timer = self.create_timer(1.0 / self.log_frequency, self.publish_pose)
 
         self.get_logger().info(f'Robot location logger started. Logging at {self.log_frequency} Hz')
         self.get_logger().info(f'Transform: {self.map_frame} -> {self.base_frame}')
 
-    def publish_robot_location(self):
+    def publish_pose(self):
         """
         Get current robot location and publish it as a PoseStamped message.
         """
@@ -69,7 +69,6 @@ class WaypointManager(Node):
             self.get_logger().warn(f'Could not get transform: {ex}')
         except Exception as ex:
             self.get_logger().error(f'Error logging robot location: {ex}')
-
 
 def main(args=None):
     rclpy.init(args=args)
