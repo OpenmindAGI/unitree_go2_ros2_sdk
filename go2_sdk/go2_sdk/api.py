@@ -142,6 +142,8 @@ class Go2APINode(Node):
         msg : geometry_msgs.msg.PoseWithCovarianceStamped
             The incoming AMCL pose message containing the robot's pose with covariance.
         """
+        if self.pose_data is None:
+            self.pose_data = PoseWithCovarianceStamped()
         self.pose_data.pose.covariance = msg.pose.covariance
 
 def main(args=None):

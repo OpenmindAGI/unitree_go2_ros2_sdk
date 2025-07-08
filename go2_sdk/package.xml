@@ -12,6 +12,7 @@
   <depend>sensor_msgs</depend>
   <depend>geometry_msgs</depend>
   <depend>rplidar_ros</depend>
+  <depend>topic_tools</depend>
   <depend>slam_toolbox</depend>
   <depend>launch</depend>
   <depend>launch_ros</depend>

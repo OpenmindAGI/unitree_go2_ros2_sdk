@@ -12,12 +12,12 @@ slam_toolbox:
 
     # Localization mode
     # mode: "localization"
-    # # We use AMCL for localization, so we don't need to publish the TF
+    # We use AMCL for localization, so we don't need to publish the TF
     # publish_tf: false
 
     # Dock parameters
-    # map_start_pose: [0.0, 0.0, 0.0]
-    map_start_at_dock: true
+    map_start_pose: [0.0, 0.0, 0.0]
+    # map_start_at_dock: true
 
     # Laser parameters (match your RPLiDAR specs)
     minimum_laser_range: 0.1
