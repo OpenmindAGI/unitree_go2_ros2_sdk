@@ -127,7 +127,10 @@ class Go2APINode(Node):
         msg : geometry_msgs.msg.PoseStamped
             The incoming PoseStamped message containing the robot's pose.
         """
-        self.pose_data = msg
+        self.pose_data = PoseWithCovarianceStamped()
+        self.pose_data.header = msg.header
+        self.pose_data.pose.pose = msg.pose
+        self.pose_data.pose.covariance = [0.0] * 36
 
     def amcl_callback(self, msg: PoseWithCovarianceStamped):
         """
