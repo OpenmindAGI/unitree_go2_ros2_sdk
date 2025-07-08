@@ -122,8 +122,6 @@ Or use an Xbox controller to control the robot
 > [!NOTE]
 > For the Xbox controller, the RB button is the enable/disable button. Different Xbox controllers may have different button mappings, so you may need to adjust the launch files accordingly.
 
-```bash
-
 ### Visualize in RViz
 
 Launch RViz with the provided configuration:
