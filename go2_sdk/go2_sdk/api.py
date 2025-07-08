@@ -69,17 +69,17 @@ class Go2APINode(Node):
 
             pose = {
                 "position": {
-                    "x": self.pose_data.pose.position.x,
-                    "y": self.pose_data.pose.position.y,
-                    "z": self.pose_data.pose.position.z
+                    "x": self.pose_data.pose.pose.position.x,
+                    "y": self.pose_data.pose.pose.position.y,
+                    "z": self.pose_data.pose.pose.position.z
                 },
                 "orientation": {
-                    "x": self.pose_data.pose.orientation.x,
-                    "y": self.pose_data.pose.orientation.y,
-                    "z": self.pose_data.pose.orientation.z,
-                    "w": self.pose_data.pose.orientation.w
+                    "x": self.pose_data.pose.pose.orientation.x,
+                    "y": self.pose_data.pose.pose.orientation.y,
+                    "z": self.pose_data.pose.pose.orientation.z,
+                    "w": self.pose_data.pose.pose.orientation.w
                 },
-                "covariance": self.pose_data.pose.covariance
+                "covariance": self.pose_data.pose.covariance.tolist()
             }
 
             return jsonify(pose), 200
@@ -127,10 +127,16 @@ class Go2APINode(Node):
         msg : geometry_msgs.msg.PoseStamped
             The incoming PoseStamped message containing the robot's pose.
         """
-        self.pose_data = PoseWithCovarianceStamped()
+        covariance = [0.0] * 36
+
+        if self.pose_data is None:
+            self.pose_data = PoseWithCovarianceStamped()
+        else:
+            covariance = self.pose_data.pose.covariance
+
         self.pose_data.header = msg.header
         self.pose_data.pose.pose = msg.pose
-        self.pose_data.pose.covariance = [0.0] * 36
+        self.pose_data.pose.covariance = covariance
 
     def amcl_callback(self, msg: PoseWithCovarianceStamped):
         """
