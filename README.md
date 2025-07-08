@@ -96,16 +96,13 @@ To start the complete SLAM system:
 ros2 launch go2_sdk slam_launch.py
 ```
 
-### Launch with Custom Parameters
+Once you have done the mapping, you can save the map through the RViz2 interface by clicking on the `Save Map` button and the `Serialize Map` button in the `SlamToolboxPlugin` panel.
 
-You can customize RPLiDAR and other parameters:
+### Launch Navigation System
+To start the navigation system with SLAM:
 
 ```bash
-ros2 launch go2_sdk slam_launch.py \
-    serial_port:=/dev/ttyUSB0 \
-    serial_baudrate:=115200 \
-    frame_id:=laser \
-    scan_mode:=Sensitivity
+ros2 launch go2_sdk nav_launch.py map_yaml_file:=<path_to_your_map_yaml_file>
 ```
 
 ### Control the Robot
@@ -119,6 +116,13 @@ ros2 run teleop_twist_keyboard teleop_twist_keyboard
 # Or publish velocity commands directly
 ros2 topic pub /cmd_vel geometry_msgs/Twist '{linear: {x: 0.5, y: 0.0, z: 0.0}, angular: {x: 0.0, y: 0.0, z: 0.0}}'
 ```
+
+Or use an Xbox controller to control the robot
+
+> [!NOTE]
+> For the Xbox controller, the RB button is the enable/disable button. Different Xbox controllers may have different button mappings, so you may need to adjust the launch files accordingly.
+
+```bash
 
 ### Visualize in RViz
 
