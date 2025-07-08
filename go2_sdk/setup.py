@@ -10,7 +10,7 @@ setup(
         ('share/ament_index/resource_index/packages',
             ['resource/go2_sdk']),
         ('share/' + package_name, ['package.xml']),
-        ('share/' + package_name + '/launch', ['launch/slam_launch.py']),
+        ('share/' + package_name + '/launch', ['launch/slam_launch.py', 'launch/nav2_launch.py']),
         ('share/' + package_name + '/config', ['config/slam.yaml', 'config/rviz.rviz', 'config/nav2_params.yaml']),
     ],
     install_requires=['setuptools'],
