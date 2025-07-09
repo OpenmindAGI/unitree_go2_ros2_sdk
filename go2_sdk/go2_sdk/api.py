@@ -1,12 +1,14 @@
 import rclpy
 import math
 from rclpy.node import Node
+from rclpy.qos import QoSProfile, ReliabilityPolicy, DurabilityPolicy
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from geometry_msgs.msg import PoseStamped, PoseWithCovarianceStamped
 import threading
 from typing import Optional
 from action_msgs.msg import GoalStatusArray
+from nav_msgs.msg import OccupancyGrid
 
 status_map = {
     0: "UNKNOWN",
@@ -52,8 +54,22 @@ class Go2APINode(Node):
             10
         )
 
+        map_qos = QoSProfile(
+            reliability=ReliabilityPolicy.RELIABLE,
+            durability=DurabilityPolicy.TRANSIENT_LOCAL,
+            depth=1
+        )
+
+        self.map_subscription = self.create_subscription(
+            OccupancyGrid,
+            '/map',
+            self.map_callback,
+            map_qos
+        )
+
         self.pose_data: Optional[PoseWithCovarianceStamped] = None
         self.nav2_status: Optional[GoalStatusArray] = None
+        self.map_data: Optional[OccupancyGrid] = None
 
         self.app = Flask(__name__)
         CORS(self.app)
@@ -186,6 +202,40 @@ class Go2APINode(Node):
 
             return jsonify({"nav2_status": status_list}), 200
 
+        @self.app.route('/api/map', methods=['GET'])
+        def get_map():
+            """
+            Get the current map data.
+            Returns a JSON object with the map metadata and occupancy grid.
+            """
+            if self.map_data is None:
+                return jsonify({"error": "Map data not available"}), 404
+
+            map_info = {
+                "map_metadata": {
+                    "map_load_time": self.map_data.info.map_load_time.sec + self.map_data.info.map_load_time.nanosec * 1e-9,
+                    "resolution": self.map_data.info.resolution,
+                    "width": self.map_data.info.width,
+                    "height": self.map_data.info.height,
+                    "origin": {
+                        "position": {
+                            "x": self.map_data.info.origin.position.x,
+                            "y": self.map_data.info.origin.position.y,
+                            "z": self.map_data.info.origin.position.z
+                        },
+                        "orientation": {
+                            "x": self.map_data.info.origin.orientation.x,
+                            "y": self.map_data.info.origin.orientation.y,
+                            "z": self.map_data.info.origin.orientation.z,
+                            "w": self.map_data.info.origin.orientation.w
+                        }
+                    }
+                },
+                "data": list(self.map_data.data)
+            }
+
+            return jsonify(map_info), 200
+
     def pose_callback(self, msg: PoseStamped):
         """
         Callback function for PoseStamped messages.
@@ -232,6 +282,19 @@ class Go2APINode(Node):
             The incoming goal status message containing the status of active goals.
         """
         self.nav2_status = msg
+
+    def map_callback(self, msg: OccupancyGrid):
+        """
+        Callback function for OccupancyGrid messages.
+        Updates the internal map data and logs the received map.
+
+        Parameters:
+        -----------
+        msg : nav_msgs.msg.OccupancyGrid
+            The incoming OccupancyGrid message containing the map data.
+        """
+        self.map_data = msg
+        self.get_logger().info(f"Received map with dimensions: {msg.info.width}x{msg.info.height}")
 
 def main(args=None):
     """
