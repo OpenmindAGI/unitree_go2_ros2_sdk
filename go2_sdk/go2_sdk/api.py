@@ -1,10 +1,22 @@
 import rclpy
+import math
 from rclpy.node import Node
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from geometry_msgs.msg import PoseStamped, PoseWithCovarianceStamped
 import threading
 from typing import Optional
+from action_msgs.msg import GoalStatusArray
+
+status_map = {
+    0: "UNKNOWN",
+    1: "ACCEPTED",
+    2: "EXECUTING",
+    3: "CANCELING",
+    4: "SUCCEEDED",
+    5: "CANCELED",
+    6: "ABORTED"
+}
 
 class Go2APINode(Node):
     """
@@ -33,7 +45,15 @@ class Go2APINode(Node):
             10
         )
 
+        self.nav2_status_subscription = self.create_subscription(
+            GoalStatusArray,
+            '/navigate_to_pose/_action/status',
+            self.goal_status_callback,
+            10
+        )
+
         self.pose_data: Optional[PoseWithCovarianceStamped] = None
+        self.nav2_status: Optional[GoalStatusArray] = None
 
         self.app = Flask(__name__)
         CORS(self.app)
@@ -69,15 +89,15 @@ class Go2APINode(Node):
 
             pose = {
                 "position": {
-                    "x": self.pose_data.pose.pose.position.x,
-                    "y": self.pose_data.pose.pose.position.y,
-                    "z": self.pose_data.pose.pose.position.z
+                    "x": round(self.pose_data.pose.pose.position.x, 5),
+                    "y": round(self.pose_data.pose.pose.position.y, 5),
+                    "z": round(self.pose_data.pose.pose.position.z, 5),
                 },
                 "orientation": {
-                    "x": self.pose_data.pose.pose.orientation.x,
-                    "y": self.pose_data.pose.pose.orientation.y,
-                    "z": self.pose_data.pose.pose.orientation.z,
-                    "w": self.pose_data.pose.pose.orientation.w
+                    "x": round(self.pose_data.pose.pose.orientation.x, 5),
+                    "y": round(self.pose_data.pose.pose.orientation.y, 5),
+                    "z": round(self.pose_data.pose.pose.orientation.z, 5),
+                    "w": round(self.pose_data.pose.pose.orientation.w, 5),
                 },
                 "covariance": self.pose_data.pose.covariance.tolist()
             }
@@ -117,6 +137,55 @@ class Go2APINode(Node):
 
             return jsonify({"status": "success", "message": "Moving to specified pose"}), 200
 
+        @self.app.route('/api/amcl_variance', methods=['GET'])
+        def get_amcl_variance():
+            """
+            Get the AMCL pose variance.
+            """
+            if self.pose_data is None:
+                return jsonify({"error": "AMCL pose data not available"}), 404
+
+            try:
+                covariance = self.pose_data.pose.covariance
+                x_uncertainty = round(covariance[0] ** (1/2), 5)
+                y_uncertainty = round(covariance[7] ** (1/2), 5)
+                yaw_uncertainty = round(covariance[35] ** (1/2) / math.pi * 180, 5)
+
+                return jsonify({
+                    "x_uncertainty": x_uncertainty,
+                    "y_uncertainty": y_uncertainty,
+                    "yaw_uncertainty": yaw_uncertainty
+                }), 200
+
+            except IndexError:
+                return jsonify({"error": "Invalid covariance data"}), 500
+
+        @self.app.route('/api/nav2_status', methods=['GET'])
+        def get_nav2_status():
+            """
+            Get the status of the Nav2 stack.
+            """
+            if self.nav2_status is None:
+                return jsonify({"error": "Nav2 status not available"}), 404
+
+            status_list = []
+
+            for status in self.nav2_status.status_list:
+                uuid_bytes = status.goal_info.goal_id.uuid
+                goal_id = ''.join(f'{b:02x}' for b in uuid_bytes)
+
+                status_info = {
+                    "goal_id": goal_id,
+                    "status": status_map.get(status.status, "UNKNOWN"),
+                    "timestamp": {
+                        "sec": status.goal_info.stamp.sec,
+                        "nanosec": status.goal_info.stamp.nanosec
+                    }
+                }
+                status_list.append(status_info)
+
+            return jsonify({"nav2_status": status_list}), 200
+
     def pose_callback(self, msg: PoseStamped):
         """
         Callback function for PoseStamped messages.
@@ -151,6 +220,18 @@ class Go2APINode(Node):
         if self.pose_data is None:
             self.pose_data = PoseWithCovarianceStamped()
         self.pose_data.pose.covariance = msg.pose.covariance
+
+    def goal_status_callback(self, msg: GoalStatusArray):
+        """
+        Callback function for Nav2 goal status updates.
+        Updates the internal Nav2 status data and logs the received status.
+
+        Parameters:
+        -----------
+        msg : action_msgs.msg.GoalStatusArray
+            The incoming goal status message containing the status of active goals.
+        """
+        self.nav2_status = msg
 
 def main(args=None):
     """

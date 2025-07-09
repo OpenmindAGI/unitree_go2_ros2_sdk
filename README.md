@@ -102,7 +102,7 @@ Once you have done the mapping, you can save the map through the RViz2 interface
 To start the navigation system with SLAM:
 
 ```bash
-ros2 launch go2_sdk nav_launch.py map_yaml_file:=<path_to_your_map_yaml_file>
+ros2 launch go2_sdk nav2_launch.py map_yaml_file:=<path_to_your_map_yaml_file>
 ```
 
 ### Control the Robot
