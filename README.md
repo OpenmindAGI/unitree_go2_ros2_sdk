@@ -207,6 +207,16 @@ Launch RViz with the provided configuration:
 rviz2 -d config/rviz.rviz
 ```
 
+## Run Zenoh Ros2 Bridge
+To run the Zenoh bridge for the Unitree Go2, you need to have the Zenoh ROS 2 bridge installed. You can find the installation instructions in the [Zenoh ROS 2 Bridge documentation](https://github.com/eclipse-zenoh/zenoh-plugin-ros2dds)
+
+After installing the Zenoh ROS 2 bridge, you can run it with the following command:
+
+```bash
+zenoh-bridge-ros2dds -c ./zenoh/zenoh_bridge_config.yaml
+```
+
+
 ## Troubleshooting
 
 ### RPLiDAR Connection Issues
