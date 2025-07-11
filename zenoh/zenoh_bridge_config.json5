@@ -1,0 +1,284 @@
+{
+  mode: "peer",
+  connect: { endpoints: ["tcp/0.0.0.0:7001"] },
+  listen: {  endpoints: ["tcp/0.0.0.0:7002"] },
+  scouting: {
+    multicast: {
+      address: "224.0.0.224:7003"
+    }
+  },
+  plugins: {
+    ros2dds: {
+      nodename: "zenoh_bridge_ros2dds_unitree",
+      domain: 0,
+      allow: {
+        publishers: [
+                      // Core robot state topics
+                      ".*/lowstate",
+                      ".*/sportmodestate",
+                      ".*/lf/sportmodestate",
+                      ".*/mf/sportmodestate",
+                      ".*/multiplestate",
+                      ".*/odom",
+                      ".*/utlidar/robot_odom",
+                      ".*/utlidar/robot_pose",
+                      ".*/om/pose",
+
+                      // Motion control
+                      ".*/cmd_vel",
+                      ".*/cmd_vel_nav",
+                      ".*/cmd_vel_teleop",
+                      ".*/lowcmd",
+
+                      // Sensor data
+                      ".*/utlidar/imu",
+                      ".*/scan",
+                      ".*/utlidar/cloud",
+                      ".*/utlidar/cloud_deskewed",
+                      ".*/gnss",
+                      ".*/gas_sensor",
+
+                      // SLAM and mapping
+                      ".*/lio_sam_ros2/mapping/odometry",
+                      ".*/map",
+                      ".*/map_updates",
+                      ".*/uslam/localization/odom",
+                      ".*/uslam/cloud_map",
+                      ".*/utlidar/grid_map",
+                      ".*/utlidar/height_map",
+                      ".*/utlidar/voxel_map",
+
+                      // Navigation
+                      ".*/amcl_pose",
+                      ".*/plan",
+                      ".*/plan_smoothed",
+                      ".*/local_plan",
+                      ".*/global_plan",
+                      ".*/waypoints",
+                      ".*/goal_pose",
+                      ".*/initialpose",
+
+                      // Transforms
+                      ".*/tf",
+                      ".*/tf_static",
+
+                      // Programming and control
+                      ".*/programming_actuator/command",
+                      ".*/programming_actuator/feedback",
+                      ".*/arm_Command",
+                      ".*/arm_Feedback",
+
+                      // Video and audio
+                      ".*/frontvideostream",
+                      ".*/videohub/inner",
+                      ".*/audiosender",
+                      ".*/audiohub/player/state",
+
+                      // Diagnostics and status
+                      ".*/diagnostics",
+                      ".*/evaluation",
+                      ".*/public_network_status",
+                      ".*/rtc_status",
+                      ".*/config_change_status",
+
+                      // Input devices
+                      ".*/joy",
+                      ".*/wirelesscontroller",
+                      ".*/wirelesscontroller_unprocessed",
+
+                      // Transition events
+                      ".*/amcl/transition_event",
+                      ".*/behavior_server/transition_event",
+                      ".*/bt_navigator/transition_event",
+                      ".*/controller_server/transition_event",
+                      ".*/map_server/transition_event",
+                      ".*/planner_server/transition_event",
+                      ".*/smoother_server/transition_event",
+                      ".*/velocity_smoother/transition_event",
+                      ".*/waypoint_follower/transition_event"
+                    ],
+        subscribers: [
+                      // Core robot state topics
+                      ".*/lowstate",
+                      ".*/sportmodestate",
+                      ".*/lf/sportmodestate",
+                      ".*/mf/sportmodestate",
+                      ".*/multiplestate",
+                      ".*/odom",
+                      ".*/utlidar/robot_odom",
+                      ".*/utlidar/robot_pose",
+                      ".*/om/pose",
+
+                      // Motion control
+                      ".*/cmd_vel",
+                      ".*/cmd_vel_nav",
+                      ".*/cmd_vel_teleop",
+                      ".*/lowcmd",
+
+                      // Sensor data
+                      ".*/utlidar/imu",
+                      ".*/scan",
+                      ".*/utlidar/cloud",
+                      ".*/utlidar/cloud_deskewed",
+                      ".*/gnss",
+                      ".*/gas_sensor",
+
+                      // SLAM and mapping
+                      ".*/lio_sam_ros2/mapping/odometry",
+                      ".*/map",
+                      ".*/map_updates",
+                      ".*/uslam/localization/odom",
+                      ".*/uslam/cloud_map",
+                      ".*/utlidar/grid_map",
+                      ".*/utlidar/height_map",
+                      ".*/utlidar/voxel_map",
+
+                      // Navigation
+                      ".*/amcl_pose",
+                      ".*/plan",
+                      ".*/plan_smoothed",
+                      ".*/local_plan",
+                      ".*/global_plan",
+                      ".*/waypoints",
+                      ".*/goal_pose",
+                      ".*/initialpose",
+
+                      // Transforms
+                      ".*/tf",
+                      ".*/tf_static",
+
+                      // Programming and control
+                      ".*/programming_actuator/command",
+                      ".*/programming_actuator/feedback",
+                      ".*/arm_Command",
+                      ".*/arm_Feedback",
+
+                      // Video and audio
+                      ".*/frontvideostream",
+                      ".*/videohub/inner",
+                      ".*/audiosender",
+                      ".*/audiohub/player/state",
+
+                      // Input devices
+                      ".*/joy",
+                      ".*/wirelesscontroller",
+                      ".*/wirelesscontroller_unprocessed",
+
+                      // GPT and AI integration
+                      ".*/gpt_cmd",
+                      ".*/gptflowfeedback"
+                     ],
+        service_servers: [
+          // API services
+          ".*/api/sport/request",
+          ".*/api/sport/response",
+          ".*/api/sport_lease/request",
+          ".*/api/sport_lease/response",
+          ".*/api/motion_switcher/request",
+          ".*/api/motion_switcher/response",
+          ".*/api/robot_state/request",
+          ".*/api/robot_state/response",
+          ".*/api/config/request",
+          ".*/api/config/response",
+          ".*/api/programming_actuator/request",
+          ".*/api/programming_actuator/response",
+          ".*/api/gpt/request",
+          ".*/api/gpt/response",
+          ".*/api/obstacles_avoid/request",
+          ".*/api/obstacles_avoid/response",
+          ".*/api/audiohub/request",
+          ".*/api/audiohub/response",
+          ".*/api/videohub/request",
+          ".*/api/videohub/response",
+          ".*/api/uwbswitch/request",
+          ".*/api/uwbswitch/response",
+          ".*/api/gas_sensor/request",
+          ".*/api/gas_sensor/response",
+          ".*/api/fourg_agent/request",
+          ".*/api/fourg_agent/response",
+          ".*/api/vui/request",
+          ".*/api/vui/response",
+          ".*/api/assistant_recorder/request",
+          ".*/api/assistant_recorder/response",
+          ".*/api/bashrunner/request",
+          ".*/api/bashrunner/response",
+
+          // SLAM services
+          ".*/uslam/client_command",
+          ".*/utlidar/mapping_cmd",
+          ".*/utlidar/switch",
+
+          // Other services
+          ".*/joy/set_feedback",
+          ".*/preempt_teleop",
+          ".*/speed_limit"
+        ],
+        service_clients: [
+          // API services
+          ".*/api/sport/request",
+          ".*/api/sport/response",
+          ".*/api/sport_lease/request",
+          ".*/api/sport_lease/response",
+          ".*/api/motion_switcher/request",
+          ".*/api/motion_switcher/response",
+          ".*/api/robot_state/request",
+          ".*/api/robot_state/response",
+          ".*/api/config/request",
+          ".*/api/config/response",
+          ".*/api/programming_actuator/request",
+          ".*/api/programming_actuator/response",
+          ".*/api/gpt/request",
+          ".*/api/gpt/response",
+          ".*/api/obstacles_avoid/request",
+          ".*/api/obstacles_avoid/response",
+          ".*/api/audiohub/request",
+          ".*/api/audiohub/response",
+          ".*/api/videohub/request",
+          ".*/api/videohub/response",
+          ".*/api/uwbswitch/request",
+          ".*/api/uwbswitch/response",
+          ".*/api/gas_sensor/request",
+          ".*/api/gas_sensor/response",
+          ".*/api/fourg_agent/request",
+          ".*/api/fourg_agent/response",
+          ".*/api/vui/request",
+          ".*/api/vui/response",
+          ".*/api/assistant_recorder/request",
+          ".*/api/assistant_recorder/response",
+          ".*/api/bashrunner/request",
+          ".*/api/bashrunner/response",
+
+          // SLAM services
+          ".*/uslam/client_command",
+          ".*/utlidar/mapping_cmd",
+          ".*/utlidar/switch",
+
+          // Other services
+          ".*/joy/set_feedback",
+          ".*/preempt_teleop",
+          ".*/speed_limit"
+        ],
+        action_servers: [
+          // Navigation actions would go here if any are detected
+          // The topic list doesn't show explicit action topics, but they might be present
+        ],
+        action_clients: [
+          // Navigation actions would go here if any are detected
+        ],
+      },
+      queries_timeout: {
+        default: 10.0,
+        actions: {
+          send_goal: 1.0,
+          cancel_goal: 1.0,
+          get_result: [
+            ".*long_mission=3600",
+            ".*short_action=10.0",
+            ".*navigation=120.0",
+            ".*mapping=60.0",
+            ],
+        }
+      }
+    }
+  }
+}

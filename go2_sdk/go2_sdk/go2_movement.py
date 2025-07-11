@@ -34,7 +34,6 @@ class CmdVelToSportNode(Node):
         self.movement_timeout = 1.0  # seconds
 
         self.last_cmd_time = self.get_clock().now()
-        self.timeout_timer = self.create_timer(0.1, self.check_timeout)
 
         self.get_logger().info("CmdVel to Sport Node initialized")
         self.get_logger().info("Subscribing to: cmd_vel")
@@ -77,17 +76,6 @@ class CmdVelToSportNode(Node):
         self.get_logger().debug(
             f"Published move command: vx={linear_x:.3f}, vy={linear_y:.3f}, vyaw={angular_z:.3f}"
         )
-
-    def check_timeout(self):
-        """
-        Check if no cmd_vel message has been received for a while.
-        If timeout occurs, send stop command to ensure robot safety.
-        """
-        current_time = self.get_clock().now()
-        time_since_last_cmd = (current_time - self.last_cmd_time).nanoseconds / 1e9
-
-        if time_since_last_cmd > self.movement_timeout:
-            self.send_stop_command()
 
     def send_stop_command(self):
         """
