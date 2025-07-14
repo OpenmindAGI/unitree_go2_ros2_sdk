@@ -20,7 +20,7 @@ services:
 
   unitree_go2_sdk:
     build: .
-    image: openmind/unitree_go2_sdk:latest
+    image: openmindagi/unitree_go2_sdk:latest
     container_name: unitree_go2_sdk
     network_mode: host
     devices:

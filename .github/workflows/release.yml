@@ -28,7 +28,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: openmindagi/turtlebridge
+          images: openmindagi/unitree_go2_sdk
           tags: |
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
