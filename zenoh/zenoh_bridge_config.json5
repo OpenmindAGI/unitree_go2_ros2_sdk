@@ -1,12 +1,5 @@
 {
   mode: "peer",
-  connect: { endpoints: ["tcp/0.0.0.0:7001"] },
-  listen: {  endpoints: ["tcp/0.0.0.0:7002"] },
-  scouting: {
-    multicast: {
-      address: "224.0.0.224:7003"
-    }
-  },
   plugins: {
     ros2dds: {
       nodename: "zenoh_bridge_ros2dds_unitree",
