@@ -2,7 +2,7 @@ import os
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
-from launch.substitutions import LaunchConfiguration
+from launch.substitutions import LaunchConfiguration, EnvironmentVariable
 from launch_ros.actions import Node
 
 def generate_launch_description():
@@ -10,15 +10,15 @@ def generate_launch_description():
 
     nav2_config_file = os.path.join(pkg_dir, 'config', 'nav2_params.yaml')
 
-    channel_type = LaunchConfiguration('channel_type', default='serial')
-    serial_port = LaunchConfiguration('serial_port', default='/dev/ttyUSB0')
-    serial_baudrate = LaunchConfiguration('serial_baudrate', default='115200')
-    frame_id = LaunchConfiguration('frame_id', default='laser')
-    inverted = LaunchConfiguration('inverted', default='false')
-    angle_compensate = LaunchConfiguration('angle_compensate', default='true')
-    scan_mode = LaunchConfiguration('scan_mode', default='Sensitivity')
-    use_nav2 = LaunchConfiguration('use_nav2', default='true')
-    map_yaml_file = LaunchConfiguration('map_yaml_file')
+    channel_type = LaunchConfiguration('channel_type', default=EnvironmentVariable('LIDAR_CHANNEL_TYPE', default_value='serial'))
+    serial_port = LaunchConfiguration('serial_port', default=EnvironmentVariable('LIDAR_SERIAL_PORT', default_value='/dev/ttyUSB0'))
+    serial_baudrate = LaunchConfiguration('serial_baudrate', default=EnvironmentVariable('LIDAR_SERIAL_BAUDRATE', default_value='115200'))
+    frame_id = LaunchConfiguration('frame_id', default=EnvironmentVariable('LIDAR_FRAME_ID', default_value='laser'))
+    inverted = LaunchConfiguration('inverted', default=EnvironmentVariable('LIDAR_INVERTED', default_value='false'))
+    angle_compensate = LaunchConfiguration('angle_compensate', default=EnvironmentVariable('LIDAR_ANGLE_COMPENSATE', default_value='true'))
+    scan_mode = LaunchConfiguration('scan_mode', default=EnvironmentVariable('LIDAR_SCAN_MODE', default_value='Sensitivity'))
+    use_nav2 = LaunchConfiguration('use_nav2', default=EnvironmentVariable('USE_NAV2', default_value='true'))
+    map_yaml_file = LaunchConfiguration('map_yaml_file', default=EnvironmentVariable('MAP_YAML_FILE', default_value=''))
 
     return LaunchDescription([
         DeclareLaunchArgument(
