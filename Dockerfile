@@ -17,9 +17,18 @@ RUN apt-get update && apt-get install -y \
     ros-humble-foxglove-bridge \
     ros-humble-rmw-cyclonedds-cpp \
     ros-humble-joy \
+    ros-humble-builtin-interfaces \
+    ros-humble-std-msgs \
+    ros-humble-geometry-msgs \
+    ros-humble-rosidl-default-generators \
+    ros-humble-rosidl-default-runtime \
+    ros-humble-rosidl-generator-c \
+    ros-humble-rosidl-typesupport-c \
+    ros-humble-rosidl-typesupport-cpp \
     libportaudio2 \
     x11-apps \
-    libsm6
+    libsm6 \
+    && rm -rf /var/lib/apt/lists/*
 
 RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 1 \
     && update-alternatives --set python3 /usr/bin/python3.10
