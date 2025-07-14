@@ -1,4 +1,4 @@
-name: TUnitree Go2 ROS2 SDK Release
+name: Unitree Go2 ROS2 SDK Release
 
 on:
   push:
