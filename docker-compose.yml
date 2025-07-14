@@ -18,45 +18,25 @@ services:
         max-file: "3"
     restart: unless-stopped
 
-  unitree_go2:
+  unitree_go2_sdk:
     build: .
-    image: unitree-go2-ros2:latest
-    container_name: unitree_go2_container
-
-    # Network mode for ROS2 communication
+    image: openmind/unitree_go2_sdk:latest
+    container_name: unitree_go2_sdk
     network_mode: host
-
-    # Device access for RPLiDAR
     devices:
       - /dev/ttyUSB0:/dev/ttyUSB0
-
-    # Privileged mode for hardware access
     privileged: true
-
-    # Environment variables
     environment:
       - DISPLAY=${DISPLAY}
       - QT_X11_NO_MITSHM=1
       - ROS_DOMAIN_ID=0
-
-    # Volume mounts
     volumes:
-      # X11 forwarding for GUI applications (RViz)
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
-      # Mount workspace for development
       - .:/ros2_ws/src/unitree_go2_ros2_sdk:rw
-      # Persistent storage for maps
       - ./maps:/ros2_ws/maps:rw
-
-    # Working directory
-    working_dir: /ros2_ws
-
-    # Keep container running
-    stdin_open: true
-    tty: true
-
-    # Restart policy
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
     restart: unless-stopped
-
-    # Command to run
-    command: bash

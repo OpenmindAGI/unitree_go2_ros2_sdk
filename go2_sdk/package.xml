@@ -30,6 +30,8 @@
   <depend>nav2_smoother</depend>
   <depend>nav2_velocity_smoother</depend>
   <depend>nav2_waypoint_follower</depend>
+  <depend>joy</depend>
+  <depend>teleop_twist_joy</depend>
 
   <test_depend>ament_copyright</test_depend>
   <test_depend>ament_flake8</test_depend>

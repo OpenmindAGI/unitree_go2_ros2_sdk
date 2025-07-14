@@ -55,9 +55,23 @@ WORKDIR /app/unitree_go2_ros2_sdk
 RUN rosdep install -y --ignore-src --from-paths . -r
 RUN pip install -r requirements.txt --force-reinstall --no-deps
 RUN source /opt/ros/humble/setup.bash && colcon build
-RUN source install/setup.bash
+
+RUN echo '#!/bin/bash' > /entrypoint.sh && \
+    echo 'set -e' >> /entrypoint.sh && \
+    echo '' >> /entrypoint.sh && \
+    echo '# Source ROS environment' >> /entrypoint.sh && \
+    echo 'source /opt/ros/humble/setup.bash' >> /entrypoint.sh && \
+    echo 'source /app/unitree_go2_ros2_sdk/install/setup.bash' >> /entrypoint.sh && \
+    echo '' >> /entrypoint.sh && \
+    echo '# If no arguments provided, run default command' >> /entrypoint.sh && \
+    echo 'if [ $# -eq 0 ]; then' >> /entrypoint.sh && \
+    echo '    exec ros2 launch go2_sdk slam_launch.py' >> /entrypoint.sh && \
+    echo 'else' >> /entrypoint.sh && \
+    echo '    exec "$@"' >> /entrypoint.sh && \
+    echo 'fi' >> /entrypoint.sh && \
+    chmod +x /entrypoint.sh
 
 # RUN echo "deb [trusted=yes] https://download.eclipse.org/zenoh/debian-repo/ /" | sudo tee -a /etc/apt/sources.list > /dev/null
 # RUN apt update && apt install zenoh-bridge-ros2dds -y
 
-CMD ros2 launch go2_sdk slam_launch.py
+ENTRYPOINT ["/entrypoint.sh"]
