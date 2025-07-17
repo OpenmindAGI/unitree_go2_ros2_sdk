@@ -30,7 +30,7 @@ amcl:
     save_pose_rate: 0.5
     sigma_hit: 0.2
     tf_broadcast: True
-    transform_tolerance: 2.0
+    transform_tolerance: 1.0
     update_min_a: 0.005
     update_min_d: 0.02
     z_hit: 0.85
@@ -134,7 +134,7 @@ controller_server:
     FollowPath:
       plugin: "dwb_core::DWBLocalPlanner"
       debug_trajectory_details: True
-      min_vel_x: -0.26
+      min_vel_x: -0.05
       min_vel_y: 0.0
       max_vel_x: 0.26
       max_vel_y: 0.0
@@ -159,9 +159,9 @@ controller_server:
       trans_stopped_velocity: 0.25
       short_circuit_trajectory_evaluation: True
       stateful: True
-      critics: [BaseObstacle", "RotateToGoal", "Oscillation", "GoalAlign", "PathAlign", "PathDist", "GoalDist"]
+      critics: ["BaseObstacle", "RotateToGoal", "Oscillation", "GoalAlign", "PathAlign", "PathDist", "GoalDist"]
       BaseObstacle:
-        scale: 1
+        scale: 1.0
       PathAlign:
         scale: 32.0
         forward_point_distance: 0.1
@@ -346,7 +346,7 @@ velocity_smoother:
     scale_velocities: False
     feedback: "OPEN_LOOP"
     max_velocity: [0.26, 0.0, 1.0]
-    min_velocity: [-0.26, 0.0, -1.0]
+    min_velocity: [-0.05, 0.0, -1.0]
     max_accel: [2.5, 0.0, 3.2]
     max_decel: [-2.5, 0.0, -3.2]
     odom_topic: "odom"
