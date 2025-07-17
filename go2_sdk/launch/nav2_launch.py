@@ -144,7 +144,7 @@ def generate_launch_description():
                 'axis_angular.z': 3,
                 'enable_button': 7,
                 'scale_linear.x': 0.5,
-                'scale_angular.z': 1.0
+                'scale_angular.z': 0.5
             }]
         ),
 

@@ -252,11 +252,30 @@
           ".*/speed_limit"
         ],
         action_servers: [
-          // Navigation actions would go here if any are detected
-          // The topic list doesn't show explicit action topics, but they might be present
+          ".*/navigate_to_pose",
+          ".*/follow_waypoints",
+          ".*/navigate_through_poses",
+          ".*/compute_path_to_pose",
+          ".*/compute_path_through_poses",
+          ".*/follow_path",
+          ".*/spin",
+          ".*/wait",
+          ".*/backup",
+          ".*/drive_on_heading",
+          ".*/assisted_teleop",
         ],
         action_clients: [
-          // Navigation actions would go here if any are detected
+          ".*/navigate_to_pose",
+          ".*/follow_waypoints",
+          ".*/navigate_through_poses",
+          ".*/compute_path_to_pose",
+          ".*/compute_path_through_poses",
+          ".*/follow_path",
+          ".*/spin",
+          ".*/wait",
+          ".*/backup",
+          ".*/drive_on_heading",
+          ".*/assisted_teleop"
         ],
       },
       queries_timeout: {

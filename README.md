@@ -213,7 +213,7 @@ To run the Zenoh bridge for the Unitree Go2, you need to have the Zenoh ROS 2 br
 After installing the Zenoh ROS 2 bridge, you can run it with the following command:
 
 ```bash
-zenoh-bridge-ros2dds -c ./zenoh/zenoh_bridge_config.yaml
+zenoh-bridge-ros2dds -c ./zenoh/zenoh_bridge_config.json5
 ```
 
 
@@ -265,4 +265,19 @@ You can find the timestamp from the Unitree Go2 by running:
 
 ```
 ros2 topic echo /utlidar/robot_pose --field header.stamp
+```
+
+If the Linux machine has an internet connection, you can share the inet connection with the Unitree Go2 robot to automatically sync the time.
+
+```bash
+sudo nmcli connection add type ethernet ifname enp112s0 con-name ethernet-shared
+sudo nmcli connection modify ethernet-shared ipv4.method shared
+sudo nmcli connection modify ethernet-shared ipv4.addresses 192.168.123.1/24
+sudo nmcli connection up ethernet-shared
+```
+
+and you can verify the shared connection with:
+
+```bash
+nmcli connection show ethernet-shared
 ```
